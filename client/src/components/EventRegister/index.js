@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import React from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
@@ -7,9 +8,9 @@ import 'semantic-ui-css/semantic.min.css';
 import { Form } from 'semantic-ui-react';
 
 const EventRegister = ({
-  saveEvent, saveHour, sendEvent,
+  saveEvent, saveHour, sendEvent, saveCount,
   nonWorkingDays, events,
-  day, hour,
+  day, hour, count,
 }) => {
   // console.log(events);
 
@@ -23,7 +24,7 @@ const EventRegister = ({
             button.disabled = false;
           },
         );
-      const found = events.filter((event) => event.content === value);
+      const found = events.filter((event) => event.day === value);
       if (found) {
         found.forEach((event) => {
           if (event.hour) {
@@ -34,17 +35,31 @@ const EventRegister = ({
     }
   };
 
-  let countPress = 0;
   const handleSelectHour = (evt) => {
     evt.preventDefault();
-    countPress += 1;
+    // eslint-disable-next-line no-param-reassign
+    count += 1;
+    saveCount(count);
     const hourSelected = document.activeElement.getAttribute('name');
-    if (!(countPress % 2 === 0)) {
+    if (!(count % 2 === 0)) {
       document.querySelector(`button[name="${hourSelected}"]`).style.backgroundColor = 'green';
+      document.querySelectorAll('.button')
+        .forEach(
+          (button) => {
+            button.disabled = true;
+          },
+        );
+      document.querySelector(`button[name="${hourSelected}"]`).disabled = false;
       saveHour(hourSelected);
     }
     else {
-      document.querySelector(`button[name="${hourSelected}"]`).style.backgroundColor = 'grey';
+      document.querySelector(`button[name="${hourSelected}"]`).style.backgroundColor = 'gainsboro';
+      document.querySelectorAll('.button')
+        .forEach(
+          (button) => {
+            button.disabled = false;
+          },
+        );
     }
   };
 
@@ -92,11 +107,13 @@ const EventRegister = ({
 EventRegister.propTypes = {
   day: PropTypes.string.isRequired,
   hour: PropTypes.string.isRequired,
+  count: PropTypes.number.isRequired,
   nonWorkingDays: PropTypes.array.isRequired,
   events: PropTypes.array.isRequired,
   saveEvent: PropTypes.func.isRequired,
   sendEvent: PropTypes.func.isRequired,
   saveHour: PropTypes.func.isRequired,
+  saveCount: PropTypes.func.isRequired,
 };
 
 export default EventRegister;

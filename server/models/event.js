@@ -3,16 +3,16 @@ const getDb = require('../util/mongodb').getDb;
 const nonWorkingDays = require('../data/nonWorkingDays');
 
 class Event {
-    constructor(content){
-        this.content = content.event;
-        this.info = content.userInfo;
-        this.hour = content.hour;
+    constructor(event){
+        this.day = event.day;
+        this.hour = event.hour;
+        this.info = event.userInfo;
     }
 
     save() {
         const db = getDb();
-        return db.collection('events')
-            .insert({content: this.content, info: this.info, hour: this.hour})
+        return db.collection('reservations')
+            .insert({day: this.day, hour: this.hour, info: this.info})
             .then(result => {
                 console.log(result);
             })
@@ -24,23 +24,18 @@ class Event {
     static fetchAll() {
         const db = getDb();
         return db
-            .collection('events')
-            .find({}).project({content:1, hour:1, _id: 0})
+            .collection('reservations')
+            .find({}).project({day:1, hour:1, _id: 0})
             .toArray()
             .then(events => {
                 // console.log(events);
-                const newTab = [];
-                // events.map(event => {
-                //     // Array.prototype.push.apply(newTab, event.content);
-                //     newTab.push(event.content);
-                // })
-
+                const nonWorkingDaysFR = [];
                 nonWorkingDays.map(nonWorkingDay => {
                     nonWorkingDay = nonWorkingDay.split('-');
-                    newTab.push(nonWorkingDay.reverse().join('-'));
+                    nonWorkingDaysFR.push(nonWorkingDay.reverse().join('-'));
                 })
-                // console.log(newTab);
-                return [newTab, events];
+                // console.log(events);
+                return [nonWorkingDaysFR, events];
             })
             .catch(err => {
                 console.log(err);
@@ -50,7 +45,7 @@ class Event {
     static deleteById(id) {
         const db = getDb();
         return db
-            .collection('events')
+            .collection('reservations')
             .deleteOne({ _id: new mongodb.ObjectId(id)})
             .then(result => {
                 return('deleted');

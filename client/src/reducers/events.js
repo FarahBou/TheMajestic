@@ -3,6 +3,7 @@ import {
   SAVE_EVENTS,
   SAVE_EVENT,
   SAVE_HOUR,
+  SAVE_COUNT,
 } from 'src/actions/local';
 
 // Initial State
@@ -11,6 +12,7 @@ const initialState = {
   clientEvents: [],
   day: '',
   hour: '',
+  count: 0,
 };
 
 // Reducer
@@ -36,6 +38,13 @@ const eventsReducer = (state = initialState, action = {}) => {
       return {
         ...state,
         hour: action.value,
+      };
+
+    case SAVE_COUNT:
+      // console.log('reducer', action.value);
+      return {
+        ...state,
+        count: action.value,
       };
 
     default:

@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import EventRegister from 'src/components/EventRegister';
 
 // Action Creators
-import { saveEvent, saveHour } from 'src/actions/local';
+import { saveEvent, saveHour, saveCount } from 'src/actions/local';
 import { sendEvent } from 'src/actions/server';
 
 // == Data / state
@@ -15,6 +15,7 @@ function mapStateToProps(state) {
   return {
     day: state.events.day,
     hour: state.events.hour,
+    count: state.events.count,
     nonWorkingDays: state.events.nonWorkingDays,
     events: state.events.clientEvents,
   };
@@ -32,6 +33,9 @@ const mapDispatchToProps = (dispatch) => ({
   },
   sendEvent: () => {
     dispatch(sendEvent());
+  },
+  saveCount: (value) => {
+    dispatch(saveCount(value));
   },
 });
 

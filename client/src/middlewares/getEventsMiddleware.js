@@ -17,7 +17,7 @@ const getEventsMiddleware = (store) => (next) => (action) => {
       })
       // succès
         .then((response) => {
-          // console.log((response.data));
+          console.log((response.data));
           store.dispatch(saveEvents(response.data));
         })
       // échec

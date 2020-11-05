@@ -13,8 +13,8 @@ const sendEventMiddleware = (store) => (next) => (action) => {
         method: 'post',
         url: 'http://localhost:3000/add-event/',
         data: {
-          event: state.demo.event,
-          hour: state.demo.hour,
+          day: state.events.day,
+          hour: state.events.hour,
           userInfo: [
             {
               name: 'Tommy Shelby',
